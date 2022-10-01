@@ -15,8 +15,8 @@ export class DiscountsService {
         private usersService: UsersService
     ) { }
 
-    async save(user: Discount): Promise<Discount> {
-        return new this.discountModel(user).save();
+    async save(discount: Discount): Promise<Discount> {
+        return new this.discountModel(discount).save();
     }
 
     async find(query, options?): Promise<Discount[]> {

@@ -2,7 +2,7 @@ import { FileFieldsInterceptor, FileInterceptor, FilesInterceptor } from '@nestj
 import { diskStorage } from 'multer';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export const fileInterceptor = (
+export const OneFileInterceptor = (
 	fileName: string,
 	location: string,
 ) => {
@@ -31,13 +31,11 @@ export const fileInterceptor = (
 	});
 };
 
-export const filesInterceptor = (
-	...files: { name: string, location: string, maxCount: 1 }[]
-) => {
-	return FileFieldsInterceptor(files, {
+export const ManyFilesInterceptor = (name: string, location: string, maxCount = 20) => {
+	return FilesInterceptor(name, maxCount, {
 		storage: diskStorage({
 			destination: function (req, file, callback) {
-				callback(null, files.find(f => f.name == file.fieldname).location);
+				callback(null, location);
 			},
 			filename: (req, file, cb) => {
 				// const datetimestamp = Date.now();

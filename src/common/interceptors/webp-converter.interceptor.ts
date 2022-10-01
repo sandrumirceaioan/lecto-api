@@ -4,7 +4,7 @@ import { tap } from 'rxjs/operators';
 import * as sharp from 'sharp';
 
 export const WebpInterceptor = (
-	fileDestination: string,
+	destination: string,
 	size: number = 400,
 ) => {
 	let interceptor = class WebpInterceptor implements NestInterceptor {
@@ -19,7 +19,7 @@ export const WebpInterceptor = (
 
 				await sharp(`${reqFile.destination}/${reqFile.originalname}`)
 					.webp()
-					.toFile(`${fileDestination}/${photoName}.webp`);
+					.toFile(`${destination}/${photoName}.webp`);
 
 				await sharp(`${reqFile.destination}/${reqFile.originalname}`)
 					.resize({
@@ -28,13 +28,7 @@ export const WebpInterceptor = (
 					})
 					.webp()
 					.toFile(
-						`${fileDestination}/${photoName}-small.webp`,
-					);
-
-				await sharp(`${reqFile.destination}/${reqFile.originalname}`)
-					.webp()
-					.toFile(
-						`${fileDestination}/${photoName}-banner.webp`,
+						`${destination}/${photoName}-small.webp`,
 					);
 			}
 
@@ -45,49 +39,36 @@ export const WebpInterceptor = (
 	return interceptor;
 };
 
-export const WebpsInterceptor = (
-	...fileDetails: { field: string; destination: string }[]
-) => {
+export const WebpsInterceptor = (destination: string, size: number = 150) => {
 	let interceptor = class WebpInterceptor implements NestInterceptor {
 		async intercept(
 			context: ExecutionContext,
 			next: CallHandler,
 		): Promise<Observable<any>> {
-			const reqFiles = context.switchToHttp().getRequest().files;
+			const images = context.switchToHttp().getRequest().files;
 
-			if (reqFiles) {
-				for (const fileDetail of fileDetails) {
-					if (reqFiles[fileDetail.field]) {
-						for(const reqFile of reqFiles[fileDetail.field]) {
-						const photoName = reqFile.originalname.split('.')[0];
+			if (images.length) {
 
-						await sharp(`${reqFile.destination}/${reqFile.originalname}`)
-							.webp()
-							.toFile(`${fileDetail.destination}/${photoName}.webp`);
+				await Promise.all(images.map(async (image) => {
 
-						await sharp(`${reqFile.destination}/${reqFile.originalname}`)
-							.resize({
-								width: 400,
-								fit: sharp.fit.cover
-							})
-							.webp()
-							.toFile(
-								`${fileDetail.destination}/${photoName}-small.webp`,
-							);
+					const photoName = image.originalname.split('.')[0];
 
-						await sharp(`${reqFile.destination}/${reqFile.originalname}`)
-							.resize({
-								width: 950,
-								height: 250,
-								fit: sharp.fit.cover
-							})
-							.webp()
-							.toFile(
-								`${fileDetail.destination}/${photoName}-banner.webp`,
-							);
-						}
-					}
-				}
+					await sharp(`${image.destination}/${image.originalname}`)
+						.webp()
+						.toFile(`${destination}/${photoName}.webp`);
+
+					await sharp(`${image.destination}/${image.originalname}`)
+						.resize({
+							width: size,
+							fit: sharp.fit.cover
+						})
+						.webp()
+						.toFile(
+							`${destination}/${photoName}-small.webp`,
+						);
+
+				}));
+
 			}
 
 			return next.handle();

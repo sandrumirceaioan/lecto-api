@@ -3,17 +3,12 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SharedService {
-    private mailGun: any;
+    appUrl: string;
 
     constructor(
         private configService: ConfigService,
     ) {
-        this.mailGun = {
-            key: this.configService.get('MAILGUN_API_KEY'),
-            domain: this.configService.get('MAILGUN_DOMAIN'),
-            sender: `mailgun@${this.configService.get('MAILGUN_DOMAIN')}`
-        }
-
+        this.appUrl = this.configService.get('APP_URL');
     }
 
     public validateOptions(options) {

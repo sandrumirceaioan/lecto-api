@@ -1,5 +1,4 @@
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as bodyParser from 'body-parser';
 import { ConfigService } from '@nestjs/config';
@@ -29,12 +28,8 @@ async function bootstrap() {
     optionsSuccessStatus: 204,
   });
 
-  app.useStaticAssets(join(__dirname, '../assets/logos'), { prefix: '/logos'});
-  app.useStaticAssets(join(__dirname, '../assets/public/logos'), { prefix: '/logos'});
-  app.useStaticAssets(join(__dirname, '../assets/public/banners'), { prefix: '/banners'});
-  app.useStaticAssets(join(__dirname, '../assets/articles'), { prefix: '/thumbnails'});
-  app.useStaticAssets(join(__dirname, '../assets/public/articles'), { prefix: '/thumbnails'});
-  app.useStaticAssets(join(__dirname, '../assets/icons'), { prefix: '/icons'});
+  app.useStaticAssets(join(__dirname, '../assets/locatii'), { prefix: '/locatii'});
+  app.useStaticAssets(join(__dirname, '../assets/public/locatii'), { prefix: '/locatii'});
 
   const port = config.get('PORT');
   await app.listen(port || 3000);
