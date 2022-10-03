@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { OfertaLocatie } from 'src/app.model';
 import { GalleryImage } from './locations.types';
 
 export type LocationsDocument = Location & Document;

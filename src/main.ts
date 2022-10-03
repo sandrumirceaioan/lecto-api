@@ -31,6 +31,9 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '../assets/locatii'), { prefix: '/locatii'});
   app.useStaticAssets(join(__dirname, '../assets/public/locatii'), { prefix: '/locatii'});
 
+  app.useStaticAssets(join(__dirname, '../assets/profesori'), { prefix: '/profesori'});
+  app.useStaticAssets(join(__dirname, '../assets/public/profesori'), { prefix: '/profesori'});
+
   const port = config.get('PORT');
   await app.listen(port || 3000);
 }

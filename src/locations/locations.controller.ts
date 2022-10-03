@@ -26,10 +26,8 @@ import { ManyFilesInterceptor, OneFileInterceptor } from '../common/interceptors
 import { WebpInterceptor, WebpsInterceptor } from '../common/interceptors/webp-converter.interceptor';
 import { GetCurrentUser } from '../common/decorators/current-user.decorator';
 import { Romania } from './locations.json';
-import { GalleryImage, Localitate, LocationGroup } from './locations.types';
+import { GalleryImage, Localitate, LocationGroup, LocationsPaginated } from './locations.types';
 import { Public } from '../common/decorators/public.decorators';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 
 @SetMetadata('roles', 'admin')
 @Controller('locations')
@@ -49,7 +47,7 @@ export class LocationsController {
 	async getPaginatedLocations(
 		@Query() params,
 		@GetCurrentUser() user: User,
-	) {
+	): Promise<LocationsPaginated> {
 		let { skip, limit, sort, direction, search } = params;
 
 		let query: any = {};
@@ -233,7 +231,7 @@ export class LocationsController {
 		return await this.locationsService.remove(id);
 	}
 
-	// GET PAGINATED LOCATIONS
+	// GET ROMANIAN LOCATIONS
 	@HttpCode(HttpStatus.OK)
 	@Public()
 	@Get('/filter')

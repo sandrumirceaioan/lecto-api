@@ -12,6 +12,6 @@ export class AppService {
   status(): string {
     const rocket = emoji.get('rocket');
     const port = this.configService.get('PORT') || 3000;
-    return `CTF API ${rocket} ${port}`;
+    return `LECTO APP ${rocket} ${port}`;
   }
 }

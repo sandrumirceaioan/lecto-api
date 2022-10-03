@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty } from "@nestjs/swagger";
 
 export type UserDocument = User & Document;
 
@@ -14,7 +13,6 @@ export class User {
   @Prop({ required: true })
   lastName: string;
 
-  @ApiProperty({ example: 'user' })
   @Prop({ required: true })
   role: 'admin' | 'user';
 
