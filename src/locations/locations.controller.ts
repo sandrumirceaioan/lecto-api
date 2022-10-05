@@ -144,7 +144,6 @@ export class LocationsController {
 		if (body.descriere && body.descriere.indexOf('<p data-f-id')) {
 			body.descriere = body.descriere.split('<p data-f-id')[0];
 		}
-
 		return await this.locationsService.save({
 			...body,
 			createdBy: userId,
@@ -212,7 +211,6 @@ export class LocationsController {
 		OneFileInterceptor('file', 'assets/locatii'),
 		WebpInterceptor('assets/public/locatii', 100),
 	)
-	@Public()
 	@HttpCode(HttpStatus.OK)
 	@Post('/content-image-upload')
 	async uploadLocationImages(

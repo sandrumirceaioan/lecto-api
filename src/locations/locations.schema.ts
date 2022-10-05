@@ -8,6 +8,9 @@ export class Location {
     @Prop({ required: true, unique: true })
     locatie: string;
 
+    @Prop({ required: true, unique: true })
+    url: string;
+
     @Prop({ required: false, type: {} })
     imagine: GalleryImage;
 

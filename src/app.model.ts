@@ -61,8 +61,17 @@ export interface Participant {
 
 export interface Curs {
     titlu: string;
+    url: string;
+    imagine: any;
     descriere: string;
-    sesiuni: string[]; // id-uri de sesiune
+    certificare: {
+        anc: boolean;
+        participare: boolean;
+    };
+    pret: {
+        anc: number;
+        participare: number;
+    };
 }
 
 export interface Sesiune {
