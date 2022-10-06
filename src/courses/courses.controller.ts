@@ -27,8 +27,8 @@ export class CoursesController {
         if (search) {
             query = Object.assign(query, {
                 $or: [
-                    { nume: new RegExp(search, 'i') },
-                    { experienta: new RegExp(search, 'i') },
+                    { titlu: new RegExp(search, 'i') },
+                    { url: new RegExp(search, 'i') },
                     { descriere: new RegExp(search, 'i') },
                 ],
             });
@@ -40,6 +40,7 @@ export class CoursesController {
         };
 
         if (sort && direction) {
+            if (sort === 'pret') sort = 'pret.anc';
             options = Object.assign(options, {
                 sort: {
                     [sort]: direction === 'asc' ? 1 : -1
@@ -85,6 +86,10 @@ export class CoursesController {
         @UploadedFile() file: Express.Multer.File,
         @GetCurrentUserId() userId: string,
     ) {
+
+        body.certificare = JSON.parse(<any>body.certificare);
+        body.pret = JSON.parse(<any>body.pret);
+
         if (file) {
             body.imagine = {
                 name: file.originalname,
@@ -93,7 +98,11 @@ export class CoursesController {
                 original: `${this.sharedService.appUrl}/cursuri/${file.originalname.split('.')[0]}.webp`
             };
         } else {
-            body.imagine = null;
+            if (body.imagine) {
+                body.imagine = JSON.parse(<any>body.imagine);
+            } else {
+                body.imagine = null;
+            }
         }
 
         return await this.coursesService.save({ ...body, createdBy: userId });
@@ -113,6 +122,9 @@ export class CoursesController {
         @GetCurrentUserId() userId: string,
     ) {
 
+        body.certificare = JSON.parse(<any>body.certificare);
+        body.pret = JSON.parse(<any>body.pret);
+
         if (file) {
             body.imagine = {
                 name: file.originalname,
@@ -121,7 +133,11 @@ export class CoursesController {
                 original: `${this.sharedService.appUrl}/cursuri/${file.originalname.split('.')[0]}.webp`
             };
         } else {
-            if (!body.imagine) body.imagine = null;
+            if (body.imagine) {
+                body.imagine = JSON.parse(<any>body.imagine);
+            } else {
+                body.imagine = null;
+            }
         }
 
         return await this.coursesService.findByIdAndUpdate(id, {

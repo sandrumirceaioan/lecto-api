@@ -93,7 +93,11 @@ export class TeachersController {
                 original: `${this.sharedService.appUrl}/profesori/${file.originalname.split('.')[0]}.webp`
             };
         } else {
-            body.imagine = null;
+            if (body.imagine) {
+                body.imagine = JSON.parse(<any>body.imagine);
+            } else {
+                body.imagine = null;
+            }
         }
 
         return await this.teachersService.save({ ...body, createdBy: userId });
@@ -121,7 +125,11 @@ export class TeachersController {
                 original: `${this.sharedService.appUrl}/profesori/${file.originalname.split('.')[0]}.webp`
             };
         } else {
-            if (!body.imagine) body.imagine = null;
+            if (body.imagine) {
+                body.imagine = JSON.parse(<any>body.imagine);
+            } else {
+                body.imagine = null;
+            }
         }
 
         return await this.teachersService.findByIdAndUpdate(id, {
