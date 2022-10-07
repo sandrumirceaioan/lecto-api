@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types, Schema as MongooseSchema } from 'mongoose';
 import { CourseCertification, CourseImage, CoursePrices } from './courses.types';
 
 export type CourseDocument = Course & Document;
@@ -26,8 +27,8 @@ export class Course {
     @Prop({ default: false })
     status: boolean;
 
-    @Prop({})
-    createdBy?: string;
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+    createdBy?: Types.ObjectId;
 
     @Prop({ default: new Date() })
     createdAt?: Date;

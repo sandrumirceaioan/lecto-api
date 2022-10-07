@@ -3,7 +3,7 @@ import { GetCurrentUserId } from '../common/decorators/current-user-id.decorator
 import { SharedService } from '../common/modules/shared/shared.service';
 import { Discount } from './discounts.schema';
 import { DiscountsService } from './discounts.service';
-import { DiscountsPaginated } from './discounts.types';
+import { CreateDiscountDTO, DiscountsPaginated } from './discounts.types';
 
 @SetMetadata('roles', 'admin')
 @Controller('discounts')
@@ -51,8 +51,6 @@ export class DiscountsController {
             this.discountsService.count(query)
         ]);
 
-        discounts = await this.discountsService.populateDiscountFields(discounts, 'users');
-
         return { discounts, total };
     }
 
@@ -76,7 +74,7 @@ export class DiscountsController {
     @HttpCode(HttpStatus.OK)
     @Post('/create')
     async createDiscount(
-        @Body() body: Discount,
+        @Body() body: CreateDiscountDTO,
         @GetCurrentUserId() userId: string,
     ) {
         return await this.discountsService.save({
@@ -90,7 +88,7 @@ export class DiscountsController {
     @Put('/:id')
     async updateDiscount(
         @Param('id') id: string,
-        @Body() body: Discount,
+        @Body() body: CreateDiscountDTO,
         @GetCurrentUserId() userId: string,
     ) {
         return await this.discountsService.findByIdAndUpdate(id, {

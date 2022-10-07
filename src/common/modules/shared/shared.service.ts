@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import * as mongoose from 'mongoose';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -40,5 +41,9 @@ export class SharedService {
         };
 
         return options;
+    }
+
+    public toObjectId(field: string): mongoose.Types.ObjectId {
+        return new mongoose.Types.ObjectId(field);
     }
 }

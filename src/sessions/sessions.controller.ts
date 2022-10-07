@@ -3,9 +3,9 @@ import { OneFileInterceptor } from '../common/interceptors/file.interceptor';
 import { WebpInterceptor } from '../common/interceptors/webp-converter.interceptor';
 import { GetCurrentUserId } from '../common/decorators/current-user-id.decorator';
 import { SharedService } from '../common/modules/shared/shared.service';
-import { Course } from './courses.schema';
-import { CoursesService } from './courses.service';
-import { CourseImage, CoursesPaginated, CreateCourseDTO } from './courses.types';
+import { Course } from './sessions.schema';
+import { CoursesService } from './sessions.service';
+import { CourseImage, CoursesPaginated, CreateCourseDTO } from './sessions.types';
 
 @SetMetadata('roles', 'admin')
 @Controller('courses')

@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types, Schema as MongooseSchema } from 'mongoose';
 import { TeacherImage } from './teachers.types';
+
 
 export type TeacherDocument = Teacher & Document;
 
@@ -23,8 +25,8 @@ export class Teacher {
     @Prop({ required: false, type: {} })
     telefon: string;
 
-    @Prop({})
-    createdBy?: string;
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+    createdBy?: Types.ObjectId;
 
     @Prop({ default: new Date() })
     createdAt?: Date;

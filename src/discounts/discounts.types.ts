@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
 import { Discount } from "./discounts.schema";
 
 export type CategorieDiscount = "volum" | "inscriere" | "fidelitate";
@@ -27,3 +27,23 @@ export interface DiscountsPaginated {
     discounts: Discount[];
     total: number;
 }
+
+export class CreateDiscountDTO {
+    @IsString()
+    @IsNotEmpty()
+    public categorie: string;
+  
+    public volum?: DiscountVolum[];
+    public inscriere?: DiscountInscriere[];
+    public fidelitate?: DiscountFidelitate[];
+
+    @IsString()
+    public descriere: string;
+   
+    @IsNotEmpty()
+    public activ: any;
+
+    public createdBy?: any;
+    public createdAt?: Date;
+}
+

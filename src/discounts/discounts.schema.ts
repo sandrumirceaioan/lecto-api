@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Types, Schema as MongooseSchema } from 'mongoose';
 import { CategorieDiscount, DiscountFidelitate, DiscountInscriere, DiscountVolum } from './discounts.types';
 
 export type DiscountDocument = Discount & Document;
@@ -23,8 +24,8 @@ export class Discount {
     @Prop({ default: false })
     activ: boolean;
 
-    @Prop()
-    createdBy?: string;
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
+    createdBy?: Types.ObjectId;
 
     @Prop({ default: new Date() })
     createdAt?: Date;

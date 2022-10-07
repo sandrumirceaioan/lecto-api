@@ -6,45 +6,49 @@ import { pick } from 'lodash';
 import { Teacher, TeacherDocument } from './teachers.schema';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/users.schema';
+import { CreateTeacherDTO } from './teachers.types';
+
 
 @Injectable()
 export class TeachersService {
     constructor(
         @InjectModel(Teacher.name) private teacherModel: Model<TeacherDocument>,
-        private sharedService: SharedService,
-        private usersService: UsersService
+        private sharedService: SharedService
     ) { }
 
-    async save(teacher: Teacher): Promise<Teacher> {
+    async save(teacher: CreateTeacherDTO): Promise<Teacher> {
+        teacher.createdBy = this.sharedService.toObjectId(teacher.createdBy);
         return new this.teacherModel(teacher).save();
     }
 
     async find(query, options?): Promise<Teacher[]> {
         options = this.sharedService.validateOptions(options);
-        return this.teacherModel.find(query).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).lean();
+        return this.teacherModel.find(query).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).populate('createdBy', 'email').lean();
     }
 
     async findOne(query, options?): Promise<Teacher> {
         options = this.sharedService.validateOptions(options);
-        return this.teacherModel.findOne(query).select(options.select).lean();
+        return this.teacherModel.findOne(query).select(options.select).populate('createdBy', 'email').lean();
     }
 
     async findById(id, options?): Promise<Teacher> {
         options = this.sharedService.validateOptions(options);
-        return this.teacherModel.findById(id).select(options.select).lean();
+        return this.teacherModel.findById(id).select(options.select).populate('createdBy', 'email').lean();
     }
 
     async findByIds(ids: string[], options?) {
         options = this.sharedService.validateOptions(options);
-        return this.teacherModel.find({ '_id': { $in: ids } }).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).lean();
+        return this.teacherModel.find({ '_id': { $in: ids } }).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).populate('createdBy', 'email').lean();
     }
 
     async findOneAndUpdate(query, update, options?): Promise<Teacher> {
+        update.createdBy = this.sharedService.toObjectId(update.createdBy);
         options = this.sharedService.validateOptions(options);
         return this.teacherModel.findOneAndUpdate(query, update, pick(options, "new", "upsert")).lean();
     }
 
     async findByIdAndUpdate(id, update, options?): Promise<Teacher> {
+        update.createdBy = this.sharedService.toObjectId(update.createdBy);
         options = this.sharedService.validateOptions(options);
         return this.teacherModel.findByIdAndUpdate(id, update, pick(options, "new", "upsert")).lean();
     }
@@ -59,21 +63,4 @@ export class TeachersService {
 
     // HELPERS
 
-    public async populateTeachersFields(teachers: Teacher[], ...methods: Array<string>) {
-        for await (const method of methods) {
-            if (method === 'users') {
-                teachers = await this.attachUsersToTeachers(teachers);
-            }
-        }
-        return teachers;
-    }
-
-    public async attachUsersToTeachers(teachers: Teacher[]): Promise<Teacher[]> {
-        const users: User[] = await this.usersService.find({}, { select: 'email' });
-
-        return teachers.map((teacher) => {
-            teacher.createdBy = users.find((user: User) => (<any>user)._id.toString() === teacher.createdBy).email;
-            return teacher;
-        });
-    }
 }

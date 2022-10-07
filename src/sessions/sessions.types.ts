@@ -1,5 +1,5 @@
 import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
-import { Course } from "./courses.schema";
+import { Course } from "./sessions.schema";
 
 export interface CourseImage {
     name: string;

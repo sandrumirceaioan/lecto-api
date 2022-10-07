@@ -25,9 +25,6 @@ export class User {
   @Prop({ required: false })
   rtHash?: string;
 
-  @Prop()
-  createdBy?: string;
-
   @Prop({ default: new Date() })
   createdAt?: Date;
 }

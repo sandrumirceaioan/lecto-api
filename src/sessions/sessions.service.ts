@@ -3,10 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SharedService } from '../common/modules/shared/shared.service';
 import { pick } from 'lodash';
-import { Course, CourseDocument } from './courses.schema';
+import { Course, CourseDocument } from './sessions.schema';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/users.schema';
-import { CreateCourseDTO } from './courses.types';
+import { CreateCourseDTO } from './sessions.types';
 
 @Injectable()
 export class CoursesService {

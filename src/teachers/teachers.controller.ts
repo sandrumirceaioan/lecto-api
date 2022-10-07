@@ -5,7 +5,7 @@ import { GetCurrentUserId } from '../common/decorators/current-user-id.decorator
 import { SharedService } from '../common/modules/shared/shared.service';
 import { Teacher } from './teachers.schema';
 import { TeachersService } from './teachers.service';
-import { TeacherImage, TeachersPaginated } from './teachers.types';
+import { CreateTeacherDTO, TeacherImage, TeachersPaginated } from './teachers.types';
 
 @SetMetadata('roles', 'admin')
 @Controller('teachers')
@@ -52,8 +52,6 @@ export class TeachersController {
             this.teachersService.count(query)
         ]);
 
-        teachers = await this.teachersService.populateTeachersFields(teachers, 'users');
-
         return { teachers, total };
     }
 
@@ -81,7 +79,7 @@ export class TeachersController {
     @HttpCode(HttpStatus.OK)
     @Post('/create')
     async createTeacher(
-        @Body() body: Teacher,
+        @Body() body: CreateTeacherDTO,
         @UploadedFile() file: Express.Multer.File,
         @GetCurrentUserId() userId: string,
     ) {
@@ -112,7 +110,7 @@ export class TeachersController {
     @Put('/:id')
     async updateTeacher(
         @Param('id') id: string,
-        @Body() body: Teacher,
+        @Body() body: CreateTeacherDTO,
         @UploadedFile() file: Express.Multer.File,
         @GetCurrentUserId() userId: string,
     ) {

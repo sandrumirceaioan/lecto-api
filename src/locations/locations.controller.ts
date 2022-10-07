@@ -26,7 +26,7 @@ import { ManyFilesInterceptor, OneFileInterceptor } from '../common/interceptors
 import { WebpInterceptor, WebpsInterceptor } from '../common/interceptors/webp-converter.interceptor';
 import { GetCurrentUser } from '../common/decorators/current-user.decorator';
 import { Romania } from './locations.json';
-import { GalleryImage, Localitate, LocationGroup, LocationsPaginated } from './locations.types';
+import { CreateLocationDTO, GalleryImage, Localitate, LocationGroup, LocationsPaginated } from './locations.types';
 import { Public } from '../common/decorators/public.decorators';
 
 @SetMetadata('roles', 'admin')
@@ -80,8 +80,6 @@ export class LocationsController {
 			this.locationsService.count(query)
 		]);
 
-		locations = await this.locationsService.populateLocationFields(locations, 'users');
-
 		return { locations, total };
 	}
 
@@ -107,7 +105,7 @@ export class LocationsController {
 	@HttpCode(HttpStatus.OK)
 	@Post('/create')
 	async createLocation(
-		@Body() body: Location,
+		@Body() body: CreateLocationDTO,
 		@UploadedFiles() files: Array<Express.Multer.File>,
 		@GetCurrentUserId() userId: string,
 	) {
@@ -160,7 +158,7 @@ export class LocationsController {
 	@Post('/update/:id')
 	async updateLocation(
 		@Param('id') id: string,
-		@Body() body: Location,
+		@Body() body: CreateLocationDTO,
 		@UploadedFiles() files: Array<Express.Multer.File>,
 		@GetCurrentUserId() userId: string,
 	) {

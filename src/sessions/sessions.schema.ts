@@ -1,35 +1,32 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types, Schema as MongooseSchema } from 'mongoose';
-import { GalleryImage } from './locations.types';
+import { CourseCertification, CourseImage, CoursePrices } from './sessions.types';
 
-export type LocationsDocument = Location & Document;
+export type CourseDocument = Course & Document;
 
 @Schema()
-export class Location {
-    @Prop({ required: true, unique: true })
-    locatie: string;
+export class Course {
+    @Prop({ required: true })
+    titlu: string;
 
     @Prop({ required: true, unique: true })
     url: string;
 
     @Prop({ required: false, type: {} })
-    imagine: GalleryImage;
+    imagine: CourseImage;
 
     @Prop({ required: false })
-    galerie: GalleryImage[];
-
-    @Prop({ required: true })
     descriere: string;
 
-    @Prop({ required: true })
-    oras: string;
+    @Prop({ required: true, type: {} })
+    certificare: CourseCertification;
 
-    @Prop({ required: true })
-    judet: string;
+    @Prop({ required: true, type: {} })
+    pret: CoursePrices;
 
     @Prop({ default: false })
     status: boolean;
-    
+
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
     createdBy?: Types.ObjectId;
 
@@ -37,4 +34,4 @@ export class Location {
     createdAt?: Date;
 }
 
-export const LocationSchema = SchemaFactory.createForClass(Location);
+export const CourseSchema = SchemaFactory.createForClass(Course);

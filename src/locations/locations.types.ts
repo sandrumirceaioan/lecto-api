@@ -28,3 +28,33 @@ export interface Localitate {
     locations: Location[];
     total: number;
 }
+
+export class CreateLocationDTO {
+  @IsString()
+  @IsNotEmpty()
+  public locatie: string;
+
+  @IsString()
+  @IsNotEmpty()
+  public url: string;
+
+  @IsString()
+  @IsNotEmpty()
+  public descriere: string;
+
+  @IsString()
+  @IsNotEmpty()
+  public oras: string;
+
+  @IsString()
+  @IsNotEmpty()
+  public judet: string;
+
+  @IsNotEmpty()
+  public status: any;
+
+  public imagine: GalleryImage;
+  public galerie: GalleryImage[];
+  public createdBy?: any;
+  public createdAt?: Date;
+}
