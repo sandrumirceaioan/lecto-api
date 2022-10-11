@@ -227,7 +227,7 @@ export class LocationsController {
 		return await this.locationsService.remove(id);
 	}
 
-	// GET ROMANIAN LOCATIONS
+	// GET ROMANIAN LOCATIONS FOR AUTOCOMPLETE
 	@HttpCode(HttpStatus.OK)
 	@Public()
 	@Get('/filter')
@@ -237,6 +237,30 @@ export class LocationsController {
 		let { search } = params;
 		if (!search || search === '') return [];
 		return this._filterGroup(search);
+	}
+
+	// GET LOCATIONS FOR AUTOCOMPLETE
+	@HttpCode(HttpStatus.OK)
+	@Public()
+	@Get('/search')
+	async searchLocations(
+		@Query() params
+	) {
+		let { search } = params;
+		if (!search || search === '') return [];
+
+		let query: any = {};
+
+		query = Object.assign(query, {
+			$or: [
+				{ locatie: new RegExp(search, 'i') },
+				{ oras: new RegExp(search, 'i') },
+				{ judet: new RegExp(search, 'i') }
+			],
+		});
+
+
+		return await this.locationsService.find(query);
 	}
 
 	private _filterGroup(value: string): LocationGroup[] {

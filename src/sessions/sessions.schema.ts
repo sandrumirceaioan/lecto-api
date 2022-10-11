@@ -1,31 +1,60 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 import { Types, Schema as MongooseSchema } from 'mongoose';
-import { CourseCertification, CourseImage, CoursePrices } from './sessions.types';
+import { CourseCertification, CoursePrices } from 'src/courses/courses.types';
+import { SessionType } from './sessions.types';
 
-export type CourseDocument = Course & Document;
+export type SessionDocument = Session & Document;
 
 @Schema()
-export class Course {
+export class SessionCourse {
+    @Prop({ required: true, type: {} })
+    course: { type: MongooseSchema.Types.ObjectId, ref: 'Course' };
+
+    @Prop({ type: {} })
+    options: {
+        discounts: [{ type: MongooseSchema.Types.ObjectId, ref: 'Discount' }];
+        teachers: [{ type: MongooseSchema.Types.ObjectId, ref: 'Teacher' }];
+        certificare?: CourseCertification;
+        pret: CoursePrices;
+    }
+}
+
+@Schema()
+export class Session {
     @Prop({ required: true })
     titlu: string;
 
-    @Prop({ required: true, unique: true })
+    @Prop({ required: true })
     url: string;
 
-    @Prop({ required: false, type: {} })
-    imagine: CourseImage;
+    @Prop({ required: true })
+    type: SessionType;
+
+    @Prop({ default: true })
+    status: boolean;
 
     @Prop({ required: false })
     descriere: string;
 
     @Prop({ required: true, type: {} })
-    certificare: CourseCertification;
+    inscriere: {
+        start: Date;
+        end: Date;
+    };
 
     @Prop({ required: true, type: {} })
-    pret: CoursePrices;
+    perioada: {
+        start: Date;
+        end: Date;
+    };
 
-    @Prop({ default: false })
-    status: boolean;
+    @Prop({ type: [] })
+    cursuri: SessionCourse[];
+
+    @Prop({ type: {} })
+    locatie: { type: MongooseSchema.Types.ObjectId, ref: 'Location' };
 
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
     createdBy?: Types.ObjectId;
@@ -34,4 +63,4 @@ export class Course {
     createdAt?: Date;
 }
 
-export const CourseSchema = SchemaFactory.createForClass(Course);
+export const SessionSchema = SchemaFactory.createForClass(Session);

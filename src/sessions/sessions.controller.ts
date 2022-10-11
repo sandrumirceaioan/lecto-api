@@ -3,23 +3,22 @@ import { OneFileInterceptor } from '../common/interceptors/file.interceptor';
 import { WebpInterceptor } from '../common/interceptors/webp-converter.interceptor';
 import { GetCurrentUserId } from '../common/decorators/current-user-id.decorator';
 import { SharedService } from '../common/modules/shared/shared.service';
-import { Course } from './sessions.schema';
-import { CoursesService } from './sessions.service';
-import { CourseImage, CoursesPaginated, CreateCourseDTO } from './sessions.types';
+import { SessionsService } from './sessions.service';
+import { SessionCreateDTO, SessionsPaginated } from './sessions.types';
 
 @SetMetadata('roles', 'admin')
-@Controller('courses')
-export class CoursesController {
+@Controller('sessions')
+export class SessionsController {
 
     constructor(
-        private coursesService: CoursesService,
+        private sessionsService: SessionsService,
         private sharedService: SharedService
     ) { }
 
-    // GET COURSES
+    // GET SESSIONS
     @HttpCode(HttpStatus.OK)
     @Get('/paginated')
-    async getPaginatedCourses(@Query() params): Promise<CoursesPaginated> {
+    async getPaginatedSessions(@Query() params): Promise<SessionsPaginated> {
         let { skip, limit, sort, direction, search } = params;
 
         let query: any = {};
@@ -48,110 +47,62 @@ export class CoursesController {
             });
         };
 
-        let [courses, total] = await Promise.all([
-            this.coursesService.find(query, options),
-            this.coursesService.count(query)
+        let [sessions, total] = await Promise.all([
+            this.sessionsService.find(query, options),
+            this.sessionsService.count(query)
         ]);
 
-        return { courses, total };
+        return { sessions, total };
     }
 
-    // GET ALL COURSES
+    // GET ALL SESSIONS
     @HttpCode(HttpStatus.OK)
     @Get('/')
-    async getCourses() {
-        return await this.coursesService.find({});
+    async getSessions() {
+        return await this.sessionsService.find({});
     }
 
     // GET ONE COURSE
     @HttpCode(HttpStatus.OK)
     @Get('/:id')
-    async getCourse(
+    async getSession(
         @Param('id') id: string,
     ) {
-        return await this.coursesService.findById(id);
+        return await this.sessionsService.findById(id);
     }
 
-    // CREATE COURSE
-    @UseInterceptors(
-        OneFileInterceptor('file', 'assets/cursuri'),
-        WebpInterceptor('assets/public/cursuri', 150),
-    )
+    // CREATE SESSION
     @HttpCode(HttpStatus.OK)
     @Post('/create')
-    async createCourse(
-        @Body() body: CreateCourseDTO,
-        @UploadedFile() file: Express.Multer.File,
+    async createSession(
+        @Body() body: SessionCreateDTO,
         @GetCurrentUserId() userId: string,
     ) {
-
-        body.certificare = JSON.parse(<any>body.certificare);
-        body.pret = JSON.parse(<any>body.pret);
-
-        if (file) {
-            body.imagine = {
-                name: file.originalname,
-                file: file,
-                small: `${this.sharedService.appUrl}/cursuri/${file.originalname.split('.')[0]}-small.webp`,
-                original: `${this.sharedService.appUrl}/cursuri/${file.originalname.split('.')[0]}.webp`
-            };
-        } else {
-            if (body.imagine) {
-                body.imagine = JSON.parse(<any>body.imagine);
-            } else {
-                body.imagine = null;
-            }
-        }
-
-        return await this.coursesService.save({ ...body, createdBy: userId });
+        return await this.sessionsService.save({ ...body, createdBy: userId });
     }
 
-    // UPDATE COURSE
-    @UseInterceptors(
-        OneFileInterceptor('file', 'assets/cursuri'),
-        WebpInterceptor('assets/public/cursuri', 150),
-    )
+    // UPDATE SESSION
     @HttpCode(HttpStatus.OK)
     @Put('/:id')
-    async updateCourse(
+    async updateSession(
         @Param('id') id: string,
-        @Body() body: CreateCourseDTO,
-        @UploadedFile() file: Express.Multer.File,
+        @Body() body: SessionCreateDTO,
         @GetCurrentUserId() userId: string,
     ) {
-
-        body.certificare = JSON.parse(<any>body.certificare);
-        body.pret = JSON.parse(<any>body.pret);
-
-        if (file) {
-            body.imagine = {
-                name: file.originalname,
-                file: file,
-                small: `${this.sharedService.appUrl}/cursuri/${file.originalname.split('.')[0]}-small.webp`,
-                original: `${this.sharedService.appUrl}/cursuri/${file.originalname.split('.')[0]}.webp`
-            };
-        } else {
-            if (body.imagine) {
-                body.imagine = JSON.parse(<any>body.imagine);
-            } else {
-                body.imagine = null;
-            }
-        }
-
-        return await this.coursesService.findByIdAndUpdate(id, {
+        return await this.sessionsService.findByIdAndUpdate(id, {
             ...body,
             createdBy: userId,
         });
     }
 
-    // UPLOAD LOCATION IMAGES
+    // UPLOAD SESSION IMAGES
     @UseInterceptors(
-        OneFileInterceptor('file', 'assets/cursuri'),
-        WebpInterceptor('assets/public/cursuri', 100),
+        OneFileInterceptor('file', 'assets/sesiuni'),
+        WebpInterceptor('assets/public/sesiuni', 100),
     )
     @HttpCode(HttpStatus.OK)
     @Post('/content-image-upload')
-    async uploadLocationImages(
+    async uploadSessionImages(
         @UploadedFile() file: Express.Multer.File,
     ): Promise<any> {
         return {
@@ -159,10 +110,10 @@ export class CoursesController {
         };
     }
 
-    // DELETE COURSE
+    // DELETE SESSION
     @HttpCode(HttpStatus.OK)
     @Delete('/:id')
-    async deleteCourse(@Param('id') id: string) {
-        return await this.coursesService.remove(id);
+    async deleteSession(@Param('id') id: string) {
+        return await this.sessionsService.remove(id);
     }
 }

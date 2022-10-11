@@ -15,6 +15,7 @@ import { DiscountsModule } from './discounts/discounts.module';
 import { LocationsModule } from './locations/locations.module';
 import { TeachersModule } from './teachers/teachers.module';
 import { CoursesModule } from './courses/courses.module';
+import { SessionsModule } from './sessions/sessions.module';
 
 @Module({
   imports: [
@@ -39,7 +40,8 @@ import { CoursesModule } from './courses/courses.module';
     DiscountsModule,
     LocationsModule,
     TeachersModule,
-    CoursesModule
+    CoursesModule,
+    SessionsModule
   ],
   controllers: [AppController],
   providers: [

@@ -3,62 +3,61 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SharedService } from '../common/modules/shared/shared.service';
 import { pick } from 'lodash';
-import { Course, CourseDocument } from './sessions.schema';
+import { Session, SessionDocument } from './sessions.schema';
 import { UsersService } from '../users/users.service';
-import { User } from '../users/users.schema';
-import { CreateCourseDTO } from './sessions.types';
+import { SessionCreateDTO } from './sessions.types';
 
 @Injectable()
-export class CoursesService {
+export class SessionsService {
     constructor(
-        @InjectModel(Course.name) private courseModel: Model<CourseDocument>,
+        @InjectModel(Session.name) private sessionModel: Model<SessionDocument>,
         private sharedService: SharedService,
         private usersService: UsersService
     ) { }
 
-    async save(course: CreateCourseDTO): Promise<Course> {
-        course.createdBy = this.sharedService.toObjectId(course.createdBy);
-        return new this.courseModel(course).save();
+    async save(session: SessionCreateDTO): Promise<Session> {
+        session.createdBy = this.sharedService.toObjectId(session.createdBy);
+        return new this.sessionModel(session).save();
     }
 
-    async find(query, options?): Promise<Course[]> {
+    async find(query, options?): Promise<Session[]> {
         options = this.sharedService.validateOptions(options);
-        return this.courseModel.find(query).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).populate('createdBy', 'email').lean();
+        return this.sessionModel.find(query).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).populate('createdBy', 'email').lean();
     }
 
-    async findOne(query, options?): Promise<Course> {
+    async findOne(query, options?): Promise<Session> {
         options = this.sharedService.validateOptions(options);
-        return this.courseModel.findOne(query).select(options.select).populate('createdBy', 'email').lean();
+        return this.sessionModel.findOne(query).select(options.select).populate('createdBy', 'email').lean();
     }
 
-    async findById(id, options?): Promise<Course> {
+    async findById(id, options?): Promise<Session> {
         options = this.sharedService.validateOptions(options);
-        return this.courseModel.findById(id).select(options.select).populate('createdBy', 'email').lean();
+        return this.sessionModel.findById(id).select(options.select).populate('createdBy', 'email').lean();
     }
 
     async findByIds(ids: string[], options?) {
         options = this.sharedService.validateOptions(options);
-        return this.courseModel.find({ '_id': { $in: ids } }).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).populate('createdBy', 'email').lean();
+        return this.sessionModel.find({ '_id': { $in: ids } }).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).populate('createdBy', 'email').lean();
     }
 
-    async findOneAndUpdate(query, update, options?): Promise<Course> {
+    async findOneAndUpdate(query, update, options?): Promise<Session> {
         update.createdBy = this.sharedService.toObjectId(update.createdBy);
         options = this.sharedService.validateOptions(options);
-        return this.courseModel.findOneAndUpdate(query, update, pick(options, "new", "upsert")).lean();
+        return this.sessionModel.findOneAndUpdate(query, update, pick(options, "new", "upsert")).lean();
     }
 
-    async findByIdAndUpdate(id, update, options?): Promise<Course> {
+    async findByIdAndUpdate(id, update, options?): Promise<Session> {
         update.createdBy = this.sharedService.toObjectId(update.createdBy);
         options = this.sharedService.validateOptions(options);
-        return this.courseModel.findByIdAndUpdate(id, update, pick(options, "new", "upsert")).lean();
+        return this.sessionModel.findByIdAndUpdate(id, update, pick(options, "new", "upsert")).lean();
     }
 
     async count(query): Promise<number> {
-        return this.courseModel.countDocuments(query).lean();
+        return this.sessionModel.countDocuments(query).lean();
     }
 
     async remove(id) {
-        return this.courseModel.findByIdAndRemove(id);
+        return this.sessionModel.findByIdAndRemove(id);
     }
 
     // HELPERS

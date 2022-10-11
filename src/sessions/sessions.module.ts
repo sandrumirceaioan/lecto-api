@@ -1,19 +1,19 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from '../users/users.module';
-import { CoursesController } from './sessions.controller';
-import { Course, CourseSchema } from './sessions.schema';
-import { CoursesService } from './sessions.service';
+import { SessionsController } from './sessions.controller';
+import { Session, SessionSchema } from './sessions.schema';
+import { SessionsService } from './sessions.service';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: Course.name, schema: CourseSchema }
+      { name: Session.name, schema: SessionSchema }
     ]),
     forwardRef(() => UsersModule),
   ],
-  controllers: [CoursesController],
-  providers: [CoursesService],
-  exports: [CoursesService]
+  controllers: [SessionsController],
+  providers: [SessionsService],
+  exports: [SessionsService]
 })
 export class SessionsModule { }

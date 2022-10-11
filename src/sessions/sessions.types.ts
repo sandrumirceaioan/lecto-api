@@ -1,48 +1,55 @@
-import { IsBoolean, IsNotEmpty, IsString } from "class-validator";
-import { Course } from "./sessions.schema";
+import { IsNotEmpty, IsString } from "class-validator";
+import { Session, SessionCourse } from "./sessions.schema";
 
-export interface CourseImage {
-    name: string;
-    file: any;
-    small?: string;
-    original?: string;
-  }
-  
+export type SessionType = "online" | "local";
 
-export interface CoursesPaginated {
-    courses: Course[];
-    total: number;
+export interface SessionsPaginated {
+  sessions: Session[];
+  total: number;
 }
 
-export interface CourseCertification {
+export interface SessionCertification {
   anc?: boolean;
   participare?: boolean;
 }
 
-export interface CoursePrices {
+export interface SessionPrices {
   anc?: number;
   participare?: number;
 }
 
-export class CreateCourseDTO {
-  @IsString()
+
+export class SessionCreateDTO {
   @IsNotEmpty()
-  public titlu: string;
-
   @IsString()
-  @IsNotEmpty()
-  public url: string;
-
-  @IsString()
-  public descriere: string;
-
-  public certificare: CourseCertification;
-  public pret: CoursePrices;
+  titlu: string;
 
   @IsNotEmpty()
-  public status: any;
+  @IsString()
+  url: string;
 
-  public imagine: CourseImage;
+  @IsNotEmpty()
+  @IsString()
+  type: SessionType;
+
+  @IsNotEmpty()
+  status: any;
+
+  @IsString()
+  descriere: string;
+
+  @IsNotEmpty()
+  inscriere: any;
+
+  @IsNotEmpty()
+  perioada: any;
+
+  @IsNotEmpty()
+  cursuri: SessionCourse[];
+
+  @IsNotEmpty()
+  locatie: Location[];
+
   public createdBy?: any;
   public createdAt?: Date;
 }

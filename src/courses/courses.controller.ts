@@ -165,4 +165,25 @@ export class CoursesController {
     async deleteCourse(@Param('id') id: string) {
         return await this.coursesService.remove(id);
     }
+
+    // GET COURSES FOR AUTOCOMPLETE
+    @HttpCode(HttpStatus.OK)
+    @Post('/search')
+    async searchCourses(
+        @Body() body
+    ) {
+        let { search } = body;
+        if (!search || search === '') return [];
+
+        let query: any = {};
+
+        query = Object.assign(query, {
+            $or: [
+                { titlu: new RegExp(search, 'i') },
+                { descriere: new RegExp(search, 'i') }
+            ],
+        });
+
+        return await this.coursesService.find(query);
+    }
 }
