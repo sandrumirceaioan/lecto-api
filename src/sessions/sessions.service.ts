@@ -22,8 +22,42 @@ export class SessionsService {
 
     async find(query, options?): Promise<Session[]> {
         options = this.sharedService.validateOptions(options);
-        return this.sessionModel.find(query).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).populate('createdBy', 'email').lean();
+        return this.sessionModel.find(query).sort(options.sort).skip(options.skip).limit(options.limit).select(options.select).populate('createdBy', 'email').populate({
+            path: 'cursuri',
+            populate: [
+                {
+                    path: 'data',
+                    model: 'Course'
+                },
+                {
+                    path: 'teachers',
+                    model: 'Teacher',
+                }]
+        }).populate({
+            path: 'locatie',
+            populate: {
+                path: 'data',
+                model: 'Location'
+            }
+        }).lean();
     }
+
+    // [
+    //     {
+    //         path: 'createdBy',
+    //         select: 'email',
+    //     },
+    //     {
+    //         path: 'locatie.data',
+    //         match: 'locatie'
+    //     },
+    //     {
+    //         path: 'cursuri.data'
+    //     },
+    //     {
+    //         path: 'cursuri.teachers'
+    //     }
+    // ]
 
     async findOne(query, options?): Promise<Session> {
         options = this.sharedService.validateOptions(options);
@@ -32,7 +66,24 @@ export class SessionsService {
 
     async findById(id, options?): Promise<Session> {
         options = this.sharedService.validateOptions(options);
-        return this.sessionModel.findById(id).select(options.select).populate('createdBy', 'email').lean();
+        return this.sessionModel.findById(id).select(options.select).populate('createdBy', 'email').populate({
+            path: 'cursuri',
+            populate: [
+                {
+                    path: 'data',
+                    model: 'Course'
+                },
+                {
+                    path: 'teachers',
+                    model: 'Teacher',
+                }]
+        }).populate({
+            path: 'locatie',
+            populate: {
+                path: 'data',
+                model: 'Location'
+            }
+        }).lean();
     }
 
     async findByIds(ids: string[], options?) {

@@ -5,6 +5,7 @@ import { GetCurrentUserId } from '../common/decorators/current-user-id.decorator
 import { SharedService } from '../common/modules/shared/shared.service';
 import { SessionsService } from './sessions.service';
 import { SessionCreateDTO, SessionsPaginated } from './sessions.types';
+import { SessionCourse } from './sessions.schema';
 
 @SetMetadata('roles', 'admin')
 @Controller('sessions')
@@ -78,7 +79,36 @@ export class SessionsController {
         @Body() body: SessionCreateDTO,
         @GetCurrentUserId() userId: string,
     ) {
-        return await this.sessionsService.save({ ...body, createdBy: userId });
+        let session = {
+            ...body,
+            cursuri: body.cursuri.map((curs: any) => {
+                let cleaned = {
+                    ...curs,
+                    data: this.sharedService.toObjectId(curs.data._id),
+                    teachers: curs.teachers.map(teacher => this.sharedService.toObjectId(teacher._id)),
+                };
+
+                delete cleaned.selectTeacher;
+                delete cleaned.toggleTeachers;
+                delete cleaned.toggleOptions;
+                delete cleaned.toggleDiscounts;
+
+                return cleaned;
+            })
+        }
+
+        if (body.locatie && body.locatie.data) {
+            session.locatie = {
+                ...body.locatie,
+                data: this.sharedService.toObjectId(body.locatie.data._id),
+            };
+        }
+
+        if (body.descriere && body.descriere.indexOf('<p data-f-id')) {
+            body.descriere = body.descriere.split('<p data-f-id')[0];
+        }
+
+        return await this.sessionsService.save({ ...session, createdBy: userId });
     }
 
     // UPDATE SESSION
@@ -89,10 +119,37 @@ export class SessionsController {
         @Body() body: SessionCreateDTO,
         @GetCurrentUserId() userId: string,
     ) {
-        return await this.sessionsService.findByIdAndUpdate(id, {
+
+        let session = {
             ...body,
-            createdBy: userId,
-        });
+            cursuri: body.cursuri.map((curs: any) => {
+                let cleaned = {
+                    ...curs,
+                    data: this.sharedService.toObjectId(curs.data._id),
+                    teachers: curs.teachers.map(teacher => this.sharedService.toObjectId(teacher._id)),
+                };
+
+                delete cleaned.selectTeacher;
+                delete cleaned.toggleTeachers;
+                delete cleaned.toggleOptions;
+                delete cleaned.toggleDiscounts;
+
+                return cleaned;
+            })
+        }
+
+        if (body.locatie && body.locatie.data) {
+            session.locatie = {
+                ...body.locatie,
+                data: this.sharedService.toObjectId(body.locatie.data._id),
+            };
+        }
+
+        if (body.descriere && body.descriere.indexOf('<p data-f-id')) {
+            body.descriere = body.descriere.split('<p data-f-id')[0];
+        }
+
+        return await this.sessionsService.findByIdAndUpdate(id, { ...session, createdBy: userId });
     }
 
     // UPLOAD SESSION IMAGES
@@ -106,7 +163,7 @@ export class SessionsController {
         @UploadedFile() file: Express.Multer.File,
     ): Promise<any> {
         return {
-            link: `${this.sharedService.appUrl}/cursuri/${file['originalname'].split('.')[0]}.webp`,
+            link: `${this.sharedService.appUrl}/sesiuni/${file['originalname'].split('.')[0]}.webp`,
         };
     }
 

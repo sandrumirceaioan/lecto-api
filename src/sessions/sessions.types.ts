@@ -35,6 +35,7 @@ export class SessionCreateDTO {
   @IsNotEmpty()
   status: any;
 
+  @IsNotEmpty()
   @IsString()
   descriere: string;
 
@@ -45,10 +46,9 @@ export class SessionCreateDTO {
   perioada: any;
 
   @IsNotEmpty()
-  cursuri: SessionCourse[];
+  cursuri: any[];
 
-  @IsNotEmpty()
-  locatie: Location[];
+  locatie: any;
 
   public createdBy?: any;
   public createdAt?: Date;

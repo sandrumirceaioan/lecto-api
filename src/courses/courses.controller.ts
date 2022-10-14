@@ -103,6 +103,10 @@ export class CoursesController {
             }
         }
 
+        if (body.descriere && body.descriere.indexOf('<p data-f-id')) {
+			body.descriere = body.descriere.split('<p data-f-id')[0];
+		}
+
         return await this.coursesService.save({ ...body, createdBy: userId });
     }
 
@@ -137,6 +141,10 @@ export class CoursesController {
                 body.imagine = null;
             }
         }
+
+        if (body.descriere && body.descriere.indexOf('<p data-f-id')) {
+			body.descriere = body.descriere.split('<p data-f-id')[0];
+		}
 
         return await this.coursesService.findByIdAndUpdate(id, {
             ...body,

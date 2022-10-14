@@ -10,15 +10,31 @@ export type SessionDocument = Session & Document;
 @Schema()
 export class SessionCourse {
     @Prop({ required: true, type: {} })
-    course: { type: MongooseSchema.Types.ObjectId, ref: 'Course' };
+    data: { type: MongooseSchema.Types.ObjectId, ref: 'Course' }
 
+    @Prop({ required: true })
+    teachers: [{ type: MongooseSchema.Types.ObjectId, ref: 'Teacher' }];
+
+    @Prop({ required: false, type: {} })
+    discounts: {
+        volum: [],
+        inscriere: [],
+        fidelitate: []
+    };
     @Prop({ type: {} })
     options: {
-        discounts: [{ type: MongooseSchema.Types.ObjectId, ref: 'Discount' }];
-        teachers: [{ type: MongooseSchema.Types.ObjectId, ref: 'Teacher' }];
         certificare?: CourseCertification;
         pret: CoursePrices;
     }
+}
+
+@Schema()
+export class SessionLocation {
+    @Prop({ required: true, type: {} })
+    data: { type: MongooseSchema.Types.ObjectId, ref: 'Location' }
+    
+    @Prop({ required: false })
+    oferte: [];
 }
 
 @Schema()
@@ -35,7 +51,7 @@ export class Session {
     @Prop({ default: true })
     status: boolean;
 
-    @Prop({ required: false })
+    @Prop({ required: true })
     descriere: string;
 
     @Prop({ required: true, type: {} })
@@ -50,11 +66,11 @@ export class Session {
         end: Date;
     };
 
-    @Prop({ type: [] })
+    @Prop({ required: true, type: [] })
     cursuri: SessionCourse[];
 
-    @Prop({ type: {} })
-    locatie: { type: MongooseSchema.Types.ObjectId, ref: 'Location' };
+    @Prop({ required: false, type: {} })
+    locatie: SessionLocation;
 
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
     createdBy?: Types.ObjectId;
