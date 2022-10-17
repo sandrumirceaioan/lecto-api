@@ -40,6 +40,9 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '../assets/sesiuni'), { prefix: '/sesiuni'});
   app.useStaticAssets(join(__dirname, '../assets/public/sesiuni'), { prefix: '/sesiuni'});
 
+  app.useStaticAssets(join(__dirname, '../assets/pagini'), { prefix: '/pagini'});
+  app.useStaticAssets(join(__dirname, '../assets/public/pagini'), { prefix: '/pagini'});
+
   const port = config.get('PORT');
   await app.listen(port || 3000);
 }

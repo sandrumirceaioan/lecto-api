@@ -16,6 +16,7 @@ import { LocationsModule } from './locations/locations.module';
 import { TeachersModule } from './teachers/teachers.module';
 import { CoursesModule } from './courses/courses.module';
 import { SessionsModule } from './sessions/sessions.module';
+import { PagesModule } from './pages/pages.module';
 
 @Module({
   imports: [
@@ -41,7 +42,8 @@ import { SessionsModule } from './sessions/sessions.module';
     LocationsModule,
     TeachersModule,
     CoursesModule,
-    SessionsModule
+    SessionsModule,
+    PagesModule
   ],
   controllers: [AppController],
   providers: [
