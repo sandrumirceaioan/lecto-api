@@ -17,6 +17,7 @@ import { TeachersModule } from './teachers/teachers.module';
 import { CoursesModule } from './courses/courses.module';
 import { SessionsModule } from './sessions/sessions.module';
 import { PagesModule } from './pages/pages.module';
+import { SettingsModule } from './settings/settings.module';
 
 @Module({
   imports: [
@@ -43,7 +44,8 @@ import { PagesModule } from './pages/pages.module';
     TeachersModule,
     CoursesModule,
     SessionsModule,
-    PagesModule
+    PagesModule,
+    SettingsModule
   ],
   controllers: [AppController],
   providers: [

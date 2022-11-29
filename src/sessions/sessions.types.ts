@@ -48,7 +48,7 @@ export class SessionCreateDTO {
   @IsNotEmpty()
   cursuri: any[];
 
-  locatie: any;
+  locatii: any[];
 
   public createdBy?: any;
   public createdAt?: Date;

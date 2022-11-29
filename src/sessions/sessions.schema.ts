@@ -70,7 +70,7 @@ export class Session {
     cursuri: SessionCourse[];
 
     @Prop({ required: false, type: {} })
-    locatie: SessionLocation;
+    locatii: SessionLocation[];
 
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User' })
     createdBy?: Types.ObjectId;
