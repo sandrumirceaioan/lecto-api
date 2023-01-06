@@ -34,11 +34,13 @@ export class SessionsService {
                     model: 'Teacher',
                 }]
         }).populate({
-            path: 'locatie',
-            populate: {
-                path: 'data',
-                model: 'Location'
-            }
+            path: 'locatii',
+            populate: [
+                {
+                    path: 'data',
+                    model: 'Location'
+                }
+            ]
         }).lean();
     }
 
@@ -78,11 +80,13 @@ export class SessionsService {
                     model: 'Teacher',
                 }]
         }).populate({
-            path: 'locatie',
-            populate: {
-                path: 'data',
-                model: 'Location'
-            }
+            path: 'locatii',
+            populate: [
+                {
+                    path: 'data',
+                    model: 'Location'
+                }
+            ]
         }).lean();
     }
 

@@ -97,12 +97,12 @@ export class SessionsController {
             })
         }
 
-        if (body.locatie && body.locatie.data) {
-            session.locatie = {
-                ...body.locatie,
-                data: this.sharedService.toObjectId(body.locatie.data._id),
-            };
-        }
+        // if (body.locatie && body.locatie.data) {
+        //     session.locatie = {
+        //         ...body.locatie,
+        //         data: this.sharedService.toObjectId(body.locatie.data._id),
+        //     };
+        // }
 
         if (body.descriere && body.descriere.indexOf('<p data-f-id')) {
             body.descriere = body.descriere.split('<p data-f-id')[0];
@@ -138,12 +138,12 @@ export class SessionsController {
             })
         }
 
-        if (body.locatie && body.locatie.data) {
-            session.locatie = {
-                ...body.locatie,
-                data: this.sharedService.toObjectId(body.locatie.data._id),
-            };
-        }
+        // if (body.locatie && body.locatie.data) {
+        //     session.locatie = {
+        //         ...body.locatie,
+        //         data: this.sharedService.toObjectId(body.locatie.data._id),
+        //     };
+        // }
 
         if (body.descriere && body.descriere.indexOf('<p data-f-id')) {
             body.descriere = body.descriere.split('<p data-f-id')[0];
