@@ -1,11 +1,5 @@
 import { IsNotEmpty, IsString } from "class-validator";
-import { Location } from "./locations.schema";
-
-export interface OfertaLocatie {
-    nume: string; // 6 nopti demipensiune, 7 nopti demipensiune, 6 nopti pensiune completa, 7 nopti pensiune completa
-    pret: number; // 4090
-    statis: boolean;
-}
+import { Resort } from "./resorts.schema";
 
 export interface GalleryImage {
   name: string;
@@ -15,15 +9,24 @@ export interface GalleryImage {
   main?: boolean;
 }
 
-  export interface LocationsPaginated {
-    locations: Location[];
-    total: number;
+export interface Localitate {
+  nume?: string;
+  simplu?: string;
+}
+export interface LocationGroup {
+  nume: string;
+  localitati: { nume?: string; simplu?: string; }[];
 }
 
-export class CreateLocationDTO {
+export interface ResortsPaginated {
+  resorts: Resort[];
+  total: number;
+}
+
+export class CreateResortDTO {
   @IsString()
   @IsNotEmpty()
-  public locatie: string;
+  public resort: string;
 
   @IsString()
   @IsNotEmpty()
@@ -33,14 +36,18 @@ export class CreateLocationDTO {
   @IsNotEmpty()
   public descriere: string;
 
+  @IsString()
   @IsNotEmpty()
-  public resort: any;
+  public oras: string;
+
+  @IsString()
+  @IsNotEmpty()
+  public judet: string;
 
   @IsNotEmpty()
   public status: any;
 
   public imagine: GalleryImage;
-  public galerie: GalleryImage[];
   public createdBy?: any;
   public createdAt?: Date;
 }

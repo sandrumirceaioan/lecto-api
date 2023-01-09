@@ -8,17 +8,13 @@ import {
 	HttpStatus,
 	Param,
 	Post,
-	Put,
 	Query,
-	Req,
-	Request,
 	SetMetadata,
 	UploadedFile,
 	UploadedFiles,
 	UseInterceptors,
 } from '@nestjs/common';
 import { SharedService } from '../common/modules/shared/shared.service';
-import { Location } from './locations.schema';
 import { User } from '../users/users.schema';
 import { LocationsService } from './locations.service';
 import { GetCurrentUserId } from '../common/decorators/current-user-id.decorator';
@@ -26,20 +22,17 @@ import { ManyFilesInterceptor, OneFileInterceptor } from '../common/interceptors
 import { WebpInterceptor, WebpsInterceptor } from '../common/interceptors/webp-converter.interceptor';
 import { GetCurrentUser } from '../common/decorators/current-user.decorator';
 import { Romania } from './locations.json';
-import { CreateLocationDTO, GalleryImage, Localitate, LocationGroup, LocationsPaginated } from './locations.types';
+import { CreateLocationDTO, GalleryImage, LocationsPaginated } from './locations.types';
 import { Public } from '../common/decorators/public.decorators';
 
 @SetMetadata('roles', 'admin')
 @Controller('locations')
 export class LocationsController {
-	romania: LocationGroup[];
 
 	constructor(
 		private locationsService: LocationsService,
 		private sharedService: SharedService,
-	) {
-		this.romania = Romania;
-	}
+	) {}
 
 	// GET PAGINATED LOCATIONS
 	@HttpCode(HttpStatus.OK)
@@ -56,8 +49,7 @@ export class LocationsController {
 			query = Object.assign(query, {
 				$or: [
 					{ locatie: new RegExp(search, 'i') },
-					{ oras: new RegExp(search, 'i') },
-					{ judet: new RegExp(search, 'i') }
+					{ descriere: new RegExp(search, 'i') },
 				],
 			});
 		}
@@ -220,23 +212,11 @@ export class LocationsController {
 	}
 
 
-	// DELETE ARTICLE
+	// DELETE LOCATION
 	@HttpCode(HttpStatus.OK)
 	@Delete('/:id')
-	async deleteArticle(@Param('id') id: string) {
+	async deleteLocation(@Param('id') id: string) {
 		return await this.locationsService.remove(id);
-	}
-
-	// GET ROMANIAN LOCATIONS FOR AUTOCOMPLETE
-	@HttpCode(HttpStatus.OK)
-	@Public()
-	@Get('/filter')
-	async getRomanianLocations(
-		@Query() params
-	) {
-		let { search } = params;
-		if (!search || search === '') return [];
-		return this._filterGroup(search);
 	}
 
 	// GET LOCATIONS FOR AUTOCOMPLETE
@@ -259,24 +239,8 @@ export class LocationsController {
 			],
 		});
 
-
 		return await this.locationsService.find(query);
 	}
-
-	private _filterGroup(value: string): LocationGroup[] {
-		if (value) {
-			return this.romania
-				.map(group => ({ nume: group.nume, localitati: this._filter(group.localitati, value) }))
-				.filter(group => group.localitati.length > 0);
-		}
-
-		return;
-	}
-
-	_filter = (localitati: Localitate[], search: string): Localitate[] => {
-		const filterValue = search.toLowerCase();
-		return localitati.filter(item => item.nume.toLowerCase().includes(filterValue));
-	};
 
 }
 

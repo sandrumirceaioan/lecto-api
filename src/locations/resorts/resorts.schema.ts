@@ -1,13 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types, Schema as MongooseSchema } from 'mongoose';
-import { GalleryImage } from './locations.types';
+import { GalleryImage } from './resorts.types';
 
-export type LocationsDocument = Location & Document;
+export type ResortsDocument = Resort & Document;
 
 @Schema()
-export class Location {
-    @Prop({ required: true, unique: true })
-    locatie: string;
+export class Resort {
+    @Prop({ required: true })
+    resort: string;
 
     @Prop({ required: true, unique: true })
     url: string;
@@ -16,13 +16,13 @@ export class Location {
     imagine: GalleryImage;
 
     @Prop({ required: false })
-    galerie: GalleryImage[];
-
-    @Prop({ required: true })
     descriere: string;
 
-    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Resort' })
-    resort: Types.ObjectId;
+    @Prop({ required: true })
+    oras: string;
+
+    @Prop({ required: true })
+    judet: string;
 
     @Prop({ default: false })
     status: boolean;
@@ -34,4 +34,4 @@ export class Location {
     createdAt?: Date;
 }
 
-export const LocationSchema = SchemaFactory.createForClass(Location);
+export const ResortSchema = SchemaFactory.createForClass(Resort);
