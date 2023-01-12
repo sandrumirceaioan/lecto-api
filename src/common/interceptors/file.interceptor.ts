@@ -30,7 +30,8 @@ export const OneFileInterceptor = (
 		},
 		limits: {
 			fieldNameSize: 300,
-			fileSize: 1048576, // 10 Mb
+			fileSize: 104857600, // 10 Mb
+			files:10
 		},
 	});
 };
