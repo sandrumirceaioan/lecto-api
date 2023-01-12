@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AllExceptionsFilter } from './common/filters/all-exception.filter';
 import { ValidationPipe } from '@nestjs/common';
+import { urlencoded, json } from 'express';
 import { join } from 'path';
 
 async function bootstrap() {
@@ -14,6 +15,8 @@ async function bootstrap() {
 
   // sets app main route
   app.setGlobalPrefix('api');
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
 
   // used for error global filter
   app.useGlobalFilters(new AllExceptionsFilter());
