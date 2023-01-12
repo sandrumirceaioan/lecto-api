@@ -28,6 +28,10 @@ export const OneFileInterceptor = (
 			}
 			callback(null, true);
 		},
+		limits: {
+			fieldNameSize: 300,
+			fileSize: 1048576, // 10 Mb
+		},
 	});
 };
 
